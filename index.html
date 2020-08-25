@@ -15,7 +15,7 @@ let websocket;
 // This is called when the page finishes loading
 function init() {
     // Connect to WebSocket server
-    //wsConnect(url);
+    wsConnect(url);
 }
 
 // Call this to connect to the WebSocket server
@@ -33,47 +33,28 @@ function wsConnect(url) {
 
 // Called when a WebSocket connection is established with the server
 function onOpen(evt) {
-
-    // Log connection state
-    console.log("Connected");
-    
-    // Enable button
-    button.disabled = false;
-    
-    // Get the current state of the LED
-    doSend("getLEDState");
+    document.getElementById("receivedData").innerHTML += `Connected<br>`;
 }
 
 // Called when the WebSocket connection is closed
 function onClose(evt) {
-
-    // Log disconnection state
-    console.log("Disconnected");
-    
-    // Disable button
-    button.disabled = true;
-    
-    // Try to reconnect after a few seconds
-    setTimeout(function() { wsConnect(url) }, 2000);
+    document.getElementById("receivedData").innerHTML += `Disconnected<br>`;
 }
 
 // Called when a message is received from the server
 function onMessage(evt) {
     // Print out our received message
-    document.getElementById("receivedData").innerHTML += `Received: ${evt.data}`;
-    console.log("Received: " + evt.data);
+    document.getElementById("receivedData").innerHTML += `Received: ${evt.data}<br>`;
 }
 
 // Called when a WebSocket error occurs
 function onError(evt) {
-    document.getElementById("receivedData").innerHTML += `Error: ${evt.data}`;
-    console.log("ERROR: " + evt.data);
+    document.getElementById("receivedData").innerHTML += `Error: ${evt.data}<br>`;
 }
 
 // Sends a message to the server (and prints it to the console)
 function doSend(message) {
-    document.getElementById("receivedData").innerHTML += `Sending: ${evt.data}`;
-    console.log("Sending: " + message);
+    document.getElementById("receivedData").innerHTML += `Sending: ${evt.data}<br>`;
     websocket.send(message);
 }
 
@@ -83,9 +64,6 @@ function onPress() {
     doSend("led");
 }
 
-// Call the init function as soon as the page loads
-window.addEventListener("load", init, false);
-
 function updateSettings() {
     websocket.send("settings__update,This_is_a_test,Password");
 }
@@ -93,6 +71,8 @@ function updateSettings() {
 </script>
 
 <h1>Web Socket Test</h1>
+
+<button onclick="init();">Attempt Connection</button>
 
 <button onclick="updateSettings();">Update Settings</button>
 
